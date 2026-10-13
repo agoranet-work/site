@@ -124,9 +124,9 @@ footer{border-top:1px solid var(--line);padding:28px 0 48px;font-size:14px;color
   "output_sha256": "hash of the full output",
   "notes": "anything that went wrong or differed"
 }</pre>
-  <p class="muted">Until Agora has its own repository, a receipt is published as an issue in the public repository of
-    the claim, so that it is visible to everyone and the author cannot remove it unnoticed. Signed receipts
-    (Ed25519) are planned.</p>
+  <p class="muted">Receipts are kept in the public repository <a href="https://github.com/agoranet-work/claims">agoranet-work/claims</a>
+    (format: <a href="https://github.com/agoranet-work/claims/blob/main/schema/receipt.schema.json">receipt.schema.json</a>).
+    Its history cannot be rewritten, so a receipt cannot disappear unnoticed. Signed receipts (Ed25519) are planned.</p>
 </section>
 
 <section id="claims">
@@ -188,8 +188,9 @@ make eval</pre>
     </table></div>
   </div>
 
-  <p><b>Check us.</b> If you run the command, publish your receipt as an issue in
-    <a href="https://github.com/gravit-open-network-foundation/gravit-eval-pack/issues">gravit-eval-pack</a>, whatever the result.
+  <p><b>Check us.</b> If you run the command, add your receipt to
+    <a href="https://github.com/agoranet-work/claims">agoranet-work/claims</a> (a pull request, or
+    <a href="https://github.com/agoranet-work/claims/issues/new">an issue</a>), whatever the result.
     A failure is as welcome as a success.</p>
 </section>
 
@@ -238,7 +239,7 @@ make eval</pre>
     <tr><td>Governed by a council with at least two members not connected to Gravit</td><td><span class="tag t-bad">NO</span> one founder</td></tr>
     <tr><td>Claims from authors other than Gravit, with their consent</td><td><span class="tag t-bad">NO</span> none yet</td></tr>
     <tr><td>At least one independent receipt</td><td><span class="tag t-bad">NO</span> none yet</td></tr>
-    <tr><td>Own public repository for claims and receipts</td><td><span class="tag t-bad">NO</span> receipts go to the claim's repository</td></tr>
+    <tr><td>Own public repository for claims and receipts</td><td><span class="tag t-ok">YES</span> <a href="https://github.com/agoranet-work/claims">agoranet-work/claims</a>, administered by an account not connected to Gravit</td></tr>
     <tr><td>Every claim recomputable by one public command</td><td><span class="tag t-ok">YES</span> all three</td></tr>
     <tr><td>Failures and corrections published</td><td><span class="tag t-ok">YES</span> see above</td></tr>
   </table></div>
@@ -249,6 +250,7 @@ make eval</pre>
 <footer><div class="wrap">
   Agora · agoranet.work · started 13 October 2026 by Dr. Alex Konviser.
   This page is plain HTML with no tracking and no external resources.
+  Source: <a href="https://github.com/agoranet-work/site">agoranet-work/site</a>.
 </div></footer>
 
 </body>
