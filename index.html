@@ -5,89 +5,104 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agora — a public square for checking claims</title>
 <meta name="description" content="Agora is a public square where published claims come with their data and one command, and anyone can check them without asking or trusting the author.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23b4532a'/%3E%3Cpath d='M6 24h20M9 24V13M16 24V13M23 24V13M6 11l10-5 10 5z' stroke='%23fbf7f0' stroke-width='2' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke-width='5' stroke-linecap='round'%3E%3Cpath d='M24 5a19 19 0 0 1 16.5 9.5' stroke='%2300b8a9'/%3E%3Cpath d='M42.9 20.6a19 19 0 0 1-6.5 17.3' stroke='%230a0a0a'/%3E%3Cpath d='M30.6 41.8a19 19 0 0 1-17.8-1.9' stroke='%230a0a0a'/%3E%3Cpath d='M8.2 34.6a19 19 0 0 1-2.9-17.6' stroke='%230a0a0a'/%3E%3Cpath d='M9.5 11.3A19 19 0 0 1 17.6 6.1' stroke='%230a0a0a'/%3E%3C/g%3E%3Ccircle cx='24' cy='24' r='5' fill='%23ff4d5e'/%3E%3C/svg%3E">
 <style>
 :root{
-  --bg:#fbf7f0; --surface:#ffffff; --ink:#1f1a14; --muted:#6b6157; --line:#e6ddcf;
-  --accent:#b4532a; --accent-soft:#f6e6dc; --ok:#2f6b3a; --ok-soft:#e3efe3; --warn:#8a5a00; --warn-soft:#f7ecd2;
-  --bad:#9b2c2c; --bad-soft:#f6e0e0; --code:#f3ede3;
-  --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --bg:#ffffff; --surface:#ffffff; --soft:#f5f7f7; --ink:#0a0a0a; --muted:#4b5563; --line:#e5e7eb;
+  --accent:#00b8a9; --accent-ink:#007a70; --accent-soft:#d6fff9; --coral:#ff4d5e;
+  --ok:#007a70; --ok-soft:#d6fff9; --warn:#a15c00; --warn-soft:#fff3c4; --bad:#e8233a; --bad-soft:#ffe1e3; --code:#f3f4f6;
+  --sans:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Helvetica,Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root{--bg:#16130f;--surface:#1e1a15;--ink:#efe8dd;--muted:#a89c8d;--line:#3a332a;--accent:#e08a5f;--accent-soft:#3a2418;
-    --ok:#8fc79a;--ok-soft:#1d2e20;--warn:#e2b75c;--warn-soft:#352a12;--bad:#e59393;--bad-soft:#3a1d1d;--code:#25201a}
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 var(--sans)}
-a{color:var(--accent)}
-.wrap{max-width:900px;margin:0 auto;padding:0 20px}
-header.top{border-bottom:1px solid var(--line)}
-header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
-.brand{display:flex;align-items:center;gap:10px;font:600 18px var(--serif);color:var(--ink);text-decoration:none}
-nav a{color:var(--muted);text-decoration:none;font-size:14px;margin-left:18px}
+a{color:var(--accent-ink);text-underline-offset:3px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header.top{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);z-index:5}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+nav a{color:var(--muted);text-decoration:none;font-size:14.5px;margin-left:22px;font-weight:500}
 nav a:hover{color:var(--ink)}
-@media(max-width:640px){nav{display:none}}
-.hero{padding:64px 0 40px}
-h1{font:600 clamp(32px,6vw,52px)/1.1 var(--serif);margin:0 0 20px;letter-spacing:-.01em}
-.lead{font-size:20px;color:var(--muted);max-width:680px;margin:0 0 28px}
-h2{font:600 28px/1.2 var(--serif);margin:0 0 14px}
+@media(max-width:700px){nav{display:none}}
+.hero{padding:64px 0 48px;display:grid;grid-template-columns:1.25fr .9fr;gap:36px;align-items:center}
+@media(max-width:860px){.hero{grid-template-columns:1fr;padding-top:40px}}
+h1{font-size:clamp(36px,6vw,60px);line-height:1.04;margin:0 0 20px;letter-spacing:-.035em;font-weight:800}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{font-size:19px;color:var(--muted);max-width:620px;margin:0 0 26px}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 8px}
+.btn{display:inline-block;padding:12px 22px;border-radius:999px;font-weight:650;font-size:15px;text-decoration:none}
+.btn1{background:var(--accent);color:#fff}.btn1:hover{background:#00a395}
+.btn2{border:2px solid var(--ink);color:var(--ink)}.btn2:hover{background:var(--ink);color:#fff}
+.panel{background:var(--accent);border-radius:24px;padding:26px;display:flex;flex-direction:column;gap:12px}
+.rc{background:#fff;border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--ink)}
+.panel small{color:#e6fffb;font-size:13px}
+h2{font-size:clamp(26px,3.6vw,36px);line-height:1.15;margin:0 0 14px;letter-spacing:-.025em;font-weight:800}
 h3{font-size:18px;margin:0 0 6px}
-section{padding:44px 0;border-top:1px solid var(--line)}
+section{padding:52px 0;border-top:1px solid var(--line)}
 p{margin:0 0 14px}
 .muted{color:var(--muted)}
-.notice{background:var(--warn-soft);border-left:4px solid var(--warn);padding:16px 18px;border-radius:4px;margin:0 0 8px}
+.notice{background:var(--warn-soft);border-left:5px solid #f5b400;padding:16px 18px;border-radius:10px;margin:0 0 40px}
 .notice b{color:var(--warn)}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
 @media(max-width:760px){.steps{grid-template-columns:1fr 1fr}}
 @media(max-width:460px){.steps{grid-template-columns:1fr}}
-.step{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px}
-.step .n{font:600 13px var(--mono);color:var(--accent)}
-.step p{font-size:15px;margin:4px 0 0;color:var(--muted)}
+.step{background:var(--soft);border-radius:16px;padding:16px}
+.step .n{font:700 13px var(--mono);color:var(--accent-ink)}
+.step p{font-size:15px;margin:6px 0 0;color:var(--muted)}
 .results{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.tag{display:inline-block;font:600 12px var(--mono);padding:3px 8px;border-radius:3px;white-space:nowrap}
+.tag{display:inline-block;font:700 12px var(--mono);padding:4px 10px;border-radius:999px;white-space:nowrap}
 .t-ok{background:var(--ok-soft);color:var(--ok)}
 .t-bad{background:var(--bad-soft);color:var(--bad)}
 .t-warn{background:var(--warn-soft);color:var(--warn)}
 .t-plain{background:var(--code);color:var(--muted)}
-.case{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:22px;margin:18px 0}
-.case-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-.case-id{font:600 13px var(--mono);color:var(--accent)}
-.claim{font:600 19px/1.4 var(--serif);margin:4px 0 12px}
-dl{display:grid;grid-template-columns:130px 1fr;gap:6px 14px;margin:0 0 14px;font-size:15px}
+.case{background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:24px;margin:18px 0}
+.case:hover{border-color:var(--accent)}
+.case-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:10px;color:var(--muted);font-size:15px}
+.case-id{font:700 13px var(--mono);color:var(--accent-ink)}
+.claim{font-weight:750;font-size:20px;line-height:1.35;margin:4px 0 14px;letter-spacing:-.01em}
+dl{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;margin:0 0 14px;font-size:15px}
 dt{color:var(--muted)}
 dd{margin:0;overflow-wrap:anywhere}
 @media(max-width:560px){dl{grid-template-columns:1fr}dt{margin-top:6px}}
-pre{background:var(--code);border-radius:6px;padding:12px 14px;overflow-x:auto;font:13.5px/1.5 var(--mono);margin:0 0 14px}
-code{font-family:var(--mono);font-size:.9em}
+pre{background:#0a0a0a;color:#e6fffb;border-radius:14px;padding:14px 16px;overflow-x:auto;font:13.5px/1.55 var(--mono);margin:0 0 14px}
+code{font-family:var(--mono);font-size:.9em;background:var(--code);padding:1px 5px;border-radius:5px}
+pre code{background:none;padding:0}
 table{width:100%;border-collapse:collapse;font-size:14.5px}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-weight:600;color:var(--muted);font-size:13px}
 .tablewrap{overflow-x:auto}
-.correction{border-left:4px solid var(--accent);background:var(--accent-soft);padding:14px 16px;border-radius:4px;margin:14px 0}
+.correction{border-left:5px solid var(--coral);background:#fff5f6;padding:14px 18px;border-radius:10px;margin:14px 0}
 footer{border-top:1px solid var(--line);padding:28px 0 48px;font-size:14px;color:var(--muted)}
 </style>
 </head>
 <body>
 
 <header class="top"><div class="wrap">
-  <a class="brand" href="#"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#b4532a"/><path d="M6 24h20M9 24V13M16 24V13M23 24V13M6 11l10-5 10 5z" stroke="#fbf7f0" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>Agora</a>
+  <a class="brand" href="#"><svg width="30" height="30" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke-width="5" stroke-linecap="round"><path d="M24 5a19 19 0 0 1 16.5 9.5" stroke="#00b8a9"/><path d="M42.9 20.6a19 19 0 0 1-6.5 17.3" stroke="#0a0a0a"/><path d="M30.6 41.8a19 19 0 0 1-17.8-1.9" stroke="#0a0a0a"/><path d="M8.2 34.6a19 19 0 0 1-2.9-17.6" stroke="#0a0a0a"/><path d="M9.5 11.3A19 19 0 0 1 17.6 6.1" stroke="#0a0a0a"/></g><circle cx="24" cy="24" r="5" fill="#ff4d5e"/></svg>Agora</a>
   <nav><a href="#how">How it works</a><a href="#claims">Claims</a><a href="#corrections">Corrections</a><a href="#funding">Funding</a><a href="#status">Status</a></nav>
 </div></header>
 
 <main class="wrap">
 
 <div class="hero">
-  <h1>A public square for checking claims.</h1>
+  <div>
+  <h1>A public square for <em>checking claims.</em></h1>
   <p class="lead">A claim posted here comes with its data and one command. Anyone can run it, without asking
-    the author and without trusting them. A claim counts as <em>independently reproduced</em> only when people
+    the author and without trusting them. A claim counts as <b>independently reproduced</b> only when people
     who are not its author have reproduced it.</p>
+  <div class="btns"><a class="btn btn1" href="#claims">See the claims</a><a class="btn btn2" href="https://github.com/agoranet-work/claims">Send a receipt</a></div>
+  </div>
+  <div class="panel"><svg width="64" height="64" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke-width="5" stroke-linecap="round"><path d="M24 5a19 19 0 0 1 16.5 9.5" stroke="#ffffff"/><path d="M42.9 20.6a19 19 0 0 1-6.5 17.3" stroke="#0a0a0a"/><path d="M30.6 41.8a19 19 0 0 1-17.8-1.9" stroke="#0a0a0a"/><path d="M8.2 34.6a19 19 0 0 1-2.9-17.6" stroke="#0a0a0a"/><path d="M9.5 11.3A19 19 0 0 1 17.6 6.1" stroke="#0a0a0a"/></g><circle cx="24" cy="24" r="5" fill="#ff4d5e"/></svg>
+    <div class="rc">A-001 · Python 3.12 <span class="tag t-ok">REPRODUCED</span></div>
+    <div class="rc">A-001 · Python 3.9 <span class="tag t-bad">NOT REPRODUCED</span></div>
+    <div class="rc">A-003 · θ calibration <span class="tag t-ok">REPRODUCED</span></div>
+    <small>Latest receipts, 13 Oct 2026 — all by the author so far.</small>
+  </div>
+</div>
   <div class="notice" id="status-short"><b>Honest status.</b> Agora was started on 13 October 2026 by one person,
     Dr. Alex Konviser, who also founded the Gravit Open Network Foundation. It is therefore <b>not yet independent</b>.
     The first claims below are that foundation's own: whoever starts the square is the first to be checked on it.
     <a href="#status">What independence will require.</a></div>
-</div>
 
 <section id="how">
   <h2>How it works</h2>
