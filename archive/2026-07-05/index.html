@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Agora Network — Neutral Validation for ERC-8004-GT</title>
+<meta name="description" content="The Agora Network is a neutral, independent validation infrastructure for the ERC-8004-GT trust transfer protocol.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --void:#05030F;
+  --deep:#0D0820;
+  --surface:#160F35;
+  --panel:#1C1445;
+  --border:rgba(120,80,255,0.18);
+  --border-bright:rgba(139,92,246,0.42);
+  --purple-bright:#8B5CF6;
+  --purple-mid:#7C3AED;
+  --purple-glow:#A78BFA;
+  --purple-pale:#C4B5FD;
+  --gon-blue:#1A3A8F;
+  --gon-glow:#4D9FFF;
+  --violet-dim:#3B1E8E;
+  --white:#F0EEFF;
+  --muted:rgba(196,181,253,0.52);
+  --mono:'Space Mono',monospace;
+  --sans:'Inter',sans-serif;
+  --display:'Space Grotesk',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--void);color:var(--white);line-height:1.7;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:64px;background:rgba(5,3,15,0.88);backdrop-filter:blur(20px);border-bottom:0.5px solid var(--border)}
+.nav-logo{font-family:var(--display);font-weight:700;font-size:1rem;letter-spacing:-0.02em;color:var(--purple-glow);text-decoration:none}
+.nav-logo span{color:var(--muted);font-weight:300}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-family:var(--display);font-size:0.8125rem;font-weight:500;color:var(--muted);text-decoration:none;letter-spacing:0.04em;text-transform:uppercase;transition:color 0.2s}
+.nav-links a:hover{color:var(--purple-pale)}
+.nav-badge{font-family:var(--mono);font-size:0.6875rem;color:var(--purple-glow);border:0.5px solid var(--border-bright);padding:4px 10px;border-radius:2px}
+
+/* STATUS BAR */
+.status-bar{background:rgba(139,92,246,0.05);border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;padding:10px 2rem;gap:2rem;flex-wrap:wrap;margin-top:64px}
+.status-item{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:0.6875rem;color:var(--muted);letter-spacing:0.06em}
+.status-dot{width:6px;height:6px;border-radius:50%;background:#34D399;animation:pulse 2.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:8rem 2rem 6rem;text-align:center;overflow:hidden}
+#network-canvas{position:absolute;inset:0;opacity:0.3}
+.gon-halo{position:absolute;width:480px;height:480px;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:1;opacity:0.12;border-radius:50%;overflow:hidden}
+.gon-halo img{width:100%;height:100%;object-fit:cover}
+.hero-content{position:relative;z-index:2;max-width:780px}
+.hero-eyebrow{font-family:var(--mono);font-size:0.6875rem;letter-spacing:0.18em;color:var(--purple-glow);text-transform:uppercase;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;gap:0.75rem}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:32px;height:0.5px;background:var(--border-bright)}
+h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.75rem);font-weight:700;letter-spacing:-0.03em;line-height:1.05;margin-bottom:1.5rem;color:var(--white)}
+h1 em{font-style:normal;color:var(--purple-glow)}
+.hero-sub{font-size:1.125rem;color:var(--muted);max-width:560px;margin:0 auto 3rem;line-height:1.8;font-weight:300}
+.hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{font-family:var(--display);font-weight:600;font-size:0.875rem;letter-spacing:0.02em;color:#0D0820;background:var(--purple-bright);border:none;padding:0.75rem 1.75rem;border-radius:2px;cursor:pointer;text-decoration:none;transition:background 0.2s,transform 0.15s;display:inline-block}
+.btn-primary:hover{background:var(--purple-pale);transform:translateY(-1px)}
+.btn-outline{font-family:var(--display);font-weight:500;font-size:0.875rem;letter-spacing:0.02em;color:var(--purple-pale);background:transparent;border:0.5px solid var(--border-bright);padding:0.75rem 1.75rem;border-radius:2px;cursor:pointer;text-decoration:none;transition:border-color 0.2s,color 0.2s,transform 0.15s;display:inline-block}
+.btn-outline:hover{border-color:var(--purple-glow);color:var(--white);transform:translateY(-1px)}
+.scroll-line{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);width:0.5px;height:48px;background:linear-gradient(to bottom,var(--border-bright),transparent);animation:scrollPulse 2s ease-in-out infinite;z-index:2}
+@keyframes scrollPulse{0%,100%{opacity:0.3}50%{opacity:0.9}}
+
+/* GON CREDIT */
+.gon-credit{position:absolute;bottom:5rem;right:2rem;z-index:3;display:flex;align-items:center;gap:8px;opacity:0.45}
+.gon-credit img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.gon-credit span{font-family:var(--mono);font-size:0.625rem;color:var(--muted);letter-spacing:0.08em}
+
+/* SECTIONS */
+section{padding:6rem 2rem;max-width:1100px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:0.6875rem;letter-spacing:0.14em;color:var(--purple-glow);text-transform:uppercase;margin-bottom:1rem}
+h2{font-family:var(--display);font-size:clamp(1.75rem,3vw,2.5rem);font-weight:700;letter-spacing:-0.025em;line-height:1.15;margin-bottom:1.5rem}
+h3{font-family:var(--display);font-size:1.125rem;font-weight:600;margin-bottom:0.75rem;color:var(--purple-pale)}
+p{color:var(--muted);font-weight:300;font-size:1rem;line-height:1.8}
+.divider{width:100%;height:0.5px;background:var(--border);max-width:1100px;margin:0 auto}
+
+/* MANIFESTO */
+.manifesto-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:3rem;align-items:start}
+.manifesto-statement{font-family:var(--display);font-size:clamp(1.4rem,2.2vw,1.875rem);font-weight:600;letter-spacing:-0.02em;line-height:1.35;color:var(--white)}
+.manifesto-statement em{font-style:normal;color:var(--purple-glow)}
+.manifesto-body p{margin-bottom:1.25rem}
+.pull-quote{border-left:2px solid var(--purple-mid);padding:1rem 1.5rem;margin:2rem 0;background:var(--panel);border-radius:0 2px 2px 0}
+.pull-quote p{font-family:var(--display);font-size:1.0625rem;font-weight:500;color:var(--purple-pale);font-style:italic;margin:0;line-height:1.65}
+
+/* COMPARE TABLE */
+.compare-table{width:100%;border-collapse:collapse;margin-top:2.5rem;font-size:0.9375rem}
+.compare-table thead th{font-family:var(--mono);font-size:0.6875rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);padding:0.625rem 1rem;text-align:left;border-bottom:0.5px solid var(--border)}
+.compare-table thead th:last-child{color:var(--purple-glow)}
+.compare-table tbody td{padding:0.75rem 1rem;border-bottom:0.5px solid rgba(139,92,246,0.07);color:var(--muted);font-weight:300}
+.compare-table tbody td:last-child{color:var(--purple-pale);font-weight:400}
+
+/* DARK BAND */
+.dark-band{background:var(--deep)}
+.dark-band-inner{padding:6rem 2rem;max-width:1100px;margin:0 auto}
+
+/* ARCH */
+.arch-layers{display:flex;flex-direction:column;gap:0;margin-top:3rem;border:0.5px solid var(--border);border-radius:4px;overflow:hidden}
+.arch-layer{display:grid;grid-template-columns:200px 1fr;border-bottom:0.5px solid var(--border)}
+.arch-layer:last-child{border-bottom:none}
+.arch-layer-label{font-family:var(--mono);font-size:0.6875rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--purple-glow);padding:1.5rem 1.25rem;background:var(--panel);border-right:0.5px solid var(--border);display:flex;flex-direction:column;gap:4px}
+.arch-layer-num{font-size:1.5rem;font-weight:700;font-family:var(--display);color:var(--violet-dim);line-height:1}
+.arch-layer-items{display:flex;flex-wrap:wrap;gap:0.5rem;padding:1.25rem;align-items:center}
+.arch-tag{font-family:var(--mono);font-size:0.75rem;color:var(--purple-pale);border:0.5px solid var(--border-bright);padding:4px 10px;border-radius:2px;background:rgba(139,92,246,0.05)}
+.arch-tag.hl{background:rgba(139,92,246,0.15);border-color:var(--purple-glow);color:var(--white)}
+
+/* LABS */
+.labs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;margin-top:3rem;background:var(--border);border:0.5px solid var(--border);border-radius:4px;overflow:hidden}
+.lab-card{background:var(--deep);padding:2rem 1.5rem;transition:background 0.2s}
+.lab-card:hover{background:var(--panel)}
+.lab-icon{width:36px;height:36px;border-radius:2px;background:rgba(139,92,246,0.1);border:0.5px solid var(--border-bright);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem}
+.lab-icon svg{width:18px;height:18px;stroke:var(--purple-glow);fill:none;stroke-width:1.5}
+
+/* CONFORMANCE */
+.classes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:3rem}
+.class-card{border:0.5px solid var(--border);border-radius:4px;overflow:hidden;transition:border-color 0.2s}
+.class-card:hover{border-color:var(--border-bright)}
+.class-card-header{padding:1.25rem 1.5rem;border-bottom:0.5px solid var(--border);background:var(--panel);display:flex;align-items:center;gap:1rem}
+.class-letter{font-family:var(--display);font-size:2rem;font-weight:700;color:var(--purple-glow);line-height:1}
+.class-name{font-family:var(--display);font-size:0.9375rem;font-weight:600;color:var(--white);margin-bottom:2px}
+.class-level{font-family:var(--mono);font-size:0.6875rem;color:var(--muted);letter-spacing:0.08em}
+.class-card-body{padding:1.25rem 1.5rem}
+.class-feature{display:flex;align-items:center;gap:0.625rem;padding:5px 0;font-size:0.875rem;color:var(--muted);font-weight:300}
+.class-feature.active{color:var(--purple-pale)}
+.feat-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.feat-dot.on{background:var(--purple-bright)}
+.feat-dot.off{background:transparent;border:0.5px solid var(--border-bright)}
+.class-card-footer{border-top:0.5px solid var(--border);padding:0.875rem 1.5rem;font-family:var(--mono);font-size:0.6875rem;color:var(--muted);letter-spacing:0.04em}
+
+/* REPOS */
+.repos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:2.5rem}
+.repo-card{border:0.5px solid var(--border);border-radius:4px;padding:1.5rem;background:var(--deep);transition:border-color 0.2s,background 0.2s;text-decoration:none;display:block}
+.repo-card:hover{border-color:var(--border-bright);background:var(--panel)}
+.repo-org{font-family:var(--mono);font-size:0.6875rem;color:var(--muted);margin-bottom:3px}
+.repo-name{font-family:var(--mono);font-size:0.9375rem;font-weight:700;color:var(--purple-glow);margin-bottom:0.75rem}
+.repo-desc{font-size:0.875rem;color:var(--muted);font-weight:300;line-height:1.6;margin-bottom:1rem}
+.repo-badge{font-family:var(--mono);font-size:0.625rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:0.5px solid}
+.repo-badge.standard{color:#A78BFA;border-color:rgba(167,139,250,0.4);background:rgba(167,139,250,0.06)}
+.repo-badge.validation{color:#34D399;border-color:rgba(52,211,153,0.35);background:rgba(52,211,153,0.05)}
+.repo-badge.implementation{color:#60A5FA;border-color:rgba(96,165,250,0.35);background:rgba(96,165,250,0.05)}
+.repo-badge.philosophy{color:#F9A8D4;border-color:rgba(249,168,212,0.35);background:rgba(249,168,212,0.05)}
+
+/* ROADMAP */
+.roadmap-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px;margin-top:2.5rem;background:var(--border);border:0.5px solid var(--border);border-radius:4px;overflow:hidden}
+.rm-cell{background:var(--deep);padding:1.5rem}
+.rm-cell.active{background:var(--panel);border-left:2px solid var(--purple-mid)}
+.rm-phase{font-family:var(--mono);font-size:0.6875rem;letter-spacing:0.1em;margin-bottom:0.75rem}
+.rm-title{font-family:var(--display);font-weight:600;font-size:1rem;color:var(--white);margin-bottom:0.75rem}
+
+/* FOOTER */
+footer{border-top:0.5px solid var(--border);padding:3rem 2rem;max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem}
+.footer-brand{font-family:var(--display);font-weight:700;font-size:0.875rem;color:var(--purple-glow)}
+.footer-brand span{color:var(--muted);font-weight:300}
+.footer-gon{display:flex;align-items:center;gap:10px}
+.footer-gon img{width:32px;height:32px;border-radius:50%;object-fit:cover;opacity:0.6}
+.footer-gon-text{font-family:var(--mono);font-size:0.6875rem;color:var(--muted);line-height:1.6}
+.footer-meta{font-family:var(--mono);font-size:0.6875rem;color:var(--muted);letter-spacing:0.05em;line-height:1.8;text-align:right}
+.footer-meta a{color:var(--purple-pale);text-decoration:none}
+.footer-meta a:hover{color:var(--white)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .manifesto-grid,.labs-grid,.classes-grid,.repos-grid,.roadmap-grid{grid-template-columns:1fr}
+  .arch-layer{grid-template-columns:1fr}
+  .arch-layer-label{border-right:none;border-bottom:0.5px solid var(--border)}
+  nav{padding:0 1.25rem}
+  .nav-links{display:none}
+  footer{flex-direction:column;align-items:flex-start}
+  .footer-meta{text-align:left}
+  .gon-halo{width:280px;height:280px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">Agora<span>net</span>.work</a>
+  <ul class="nav-links">
+    <li><a href="#manifesto">Manifesto</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#conformance">Conformance</a></li>
+    <li><a href="#repositories">Repositories</a></li>
+  </ul>
+  <span class="nav-badge">ERC-8004-GT · v1.0</span>
+</nav>
+
+<div class="status-bar">
+  <div class="status-item"><span class="status-dot"></span>Phase 1 — Launch · June 2026</div>
+  <div class="status-item">Standard: ERC-8004-GT</div>
+  <div class="status-item">Conformance Classes: A · B · C</div>
+  <div class="status-item">Status: Draft for Community Review</div>
+</div>
+
+<section class="hero">
+  <canvas id="network-canvas"></canvas>
+
+  <!-- GON halo: subtle orbital bloom echoing Gravit Open Network -->
+  <div class="gon-halo">
+    <img src="gravit-astra.webp" alt="">
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Neutral Validation Infrastructure</div>
+    <h1>The <em>Agora</em> Network</h1>
+    <p class="hero-sub">
+      An independent conformance and interoperability testbed
+      for the ERC-8004-GT trust transfer protocol.
+      It belongs to no one. It serves everyone.
+    </p>
+    <div class="hero-actions">
+      <a href="#manifesto" class="btn-primary">Read the Manifesto</a>
+      <a href="#repositories" class="btn-outline">View Repositories</a>
+    </div>
+  </div>
+
+  <div class="gon-credit">
+    <img src="gravit-astra.webp" alt="GON">
+    <span>Reference implementation by<br>Gravit Open Network</span>
+  </div>
+
+  <div class="scroll-line"></div>
+</section>
+
+<!-- MANIFESTO -->
+<section id="manifesto">
+  <div class="section-label">Manifesto</div>
+  <h2>Why the World Needs a Protocol<br>for Trust Transfer</h2>
+  <div class="manifesto-grid">
+    <div>
+      <p class="manifesto-statement">
+        Trust is the foundation of all economic and social systems.<br><br>
+        Today, trust is <em>broken</em>.
+      </p>
+      <table class="compare-table">
+        <thead><tr><th>Today</th><th>With ERC-8004-GT</th></tr></thead>
+        <tbody>
+          <tr><td>Trust is a feeling</td><td>Trust is a data structure</td></tr>
+          <tr><td>Trust is static</td><td>Trust evolves through challenge</td></tr>
+          <tr><td>Trust is opaque</td><td>Trust is auditable</td></tr>
+          <tr><td>Trust is centralized</td><td>Trust is decentralized</td></tr>
+          <tr><td>Trust is based on identity</td><td>Trust is based on verifiable evidence</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="manifesto-body">
+      <p>In the age of autonomous systems, the old model fails. AI agents make decisions that affect credit approvals, medical diagnoses, legal judgements, and scientific truth claims.</p>
+      <p>The question is not whether we trust the agent.</p>
+      <p>The question is: how do we verify, challenge, and audit the knowledge the agent uses?</p>
+      <div class="pull-quote">
+        <p>ERC-8004-GT does not certify truth. It certifies the current verifiable epistemic state of an assertion.</p>
+      </div>
+      <p>The Agora Network exists to validate that any implementation of this standard is conformant, interoperable, and semantically stable — independently of any single organization, company, or protocol author.</p>
+      <p style="margin-top:1rem">ERC-20 standardized value transfer.<br>
+      <strong style="color:var(--purple-pale);font-weight:500">ERC-8004-GT standardizes trust transfer.</strong></p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ARCHITECTURE -->
+<div class="dark-band" id="architecture">
+  <div class="dark-band-inner">
+    <div class="section-label">Architecture</div>
+    <h2>Three Layers of the Ecosystem</h2>
+    <p style="max-width:540px">The correct architecture of power: standard defines, validation verifies, implementations compete. Never the other way around.</p>
+    <div class="arch-layers">
+      <div class="arch-layer">
+        <div class="arch-layer-label"><span class="arch-layer-num">0</span>Standard</div>
+        <div class="arch-layer-items">
+          <span class="arch-tag hl">ERC-8004-GT</span>
+          <span class="arch-tag">Constitution</span>
+          <span class="arch-tag">Core Draft</span>
+          <span class="arch-tag">Glossary</span>
+          <span class="arch-tag">Boundaries</span>
+          <span class="arch-tag">Conformance Classes A · B · C</span>
+          <span class="arch-tag">Layered Architecture</span>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-layer-label"><span class="arch-layer-num">1</span>Validation</div>
+        <div class="arch-layer-items">
+          <span class="arch-tag hl">The Agora Network</span>
+          <span class="arch-tag">Conformance Lab</span>
+          <span class="arch-tag">Interoperability Lab</span>
+          <span class="arch-tag">Semantic Stability Lab</span>
+          <span class="arch-tag">Mock Implementations</span>
+          <span class="arch-tag">Test Vectors</span>
+        </div>
+      </div>
+      <div class="arch-layer" style="border-bottom:none">
+        <div class="arch-layer-label"><span class="arch-layer-num">2</span>Implementations</div>
+        <div class="arch-layer-items">
+          <span class="arch-tag hl">GON Epistemic OS</span>
+          <span class="arch-tag">Enterprise Trust (Class B)</span>
+          <span class="arch-tag">Academic Systems (Class A)</span>
+          <span class="arch-tag">DeFi Protocols (Class C)</span>
+          <span class="arch-tag">Your Implementation</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:4rem">
+      <div class="section-label">The Three Labs</div>
+      <h2>What the Agora Network Does</h2>
+      <div class="labs-grid">
+        <div class="lab-card">
+          <div class="lab-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          </div>
+          <h3>Conformance Lab</h3>
+          <p>Verifies that an implementation correctly supports the capabilities it claims Class A, B, or C  against a canonical suite of test vectors.</p>
+        </div>
+        <div class="lab-card">
+          <div class="lab-icon">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="3"/><circle cx="15" cy="12" r="3"/><path d="M12 3v2M12 19v2M3 12H1M23 12h-2"/></svg>
+          </div>
+          <h3>Interoperability Lab</h3>
+          <p>Runs cross-implementation tests: artifacts created by one system must be readable, verifiable, and challengeable by any other conformant system.</p>
+        </div>
+        <div class="lab-card">
+          <div class="lab-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3>Semantic Stability Lab</h3>
+          <p>Detects semantic drift: ensures the meaning of core entities Claim, Evidence, Artifact does not diverge across versions and implementations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFORMANCE -->
+<section id="conformance">
+  <div class="section-label">Conformance</div>
+  <h2>Three Classes of Compliance</h2>
+  <p style="max-width:580px">When someone says "we support ERC-8004-GT", the Conformance Class defines precisely what that means. No ambiguity.</p>
+  <div class="classes-grid">
+    <div class="class-card">
+      <div class="class-card-header">
+        <div class="class-letter">A</div>
+        <div><div class="class-name">Core</div><div class="class-level">Minimal · ~100 lines</div></div>
+      </div>
+      <div class="class-card-body">
+        <div class="class-feature active"><span class="feat-dot on"></span>Claim</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Artifact</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Revision</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Epistemic State</div>
+        <div class="class-feature"><span class="feat-dot off"></span>Evidence</div>
+        <div class="class-feature"><span class="feat-dot off"></span>Attestation</div>
+        <div class="class-feature"><span class="feat-dot off"></span>Challenge</div>
+        <div class="class-feature"><span class="feat-dot off"></span>Trust Score</div>
+        <div class="class-feature"><span class="feat-dot off"></span>Consensus</div>
+      </div>
+      <div class="class-card-footer">Use case: academic research · single-agent systems</div>
+    </div>
+    <div class="class-card" style="border-color:rgba(139,92,246,0.32)">
+      <div class="class-card-header">
+        <div class="class-letter">B</div>
+        <div><div class="class-name">Epistemic</div><div class="class-level">Full lifecycle · ~500 lines</div></div>
+      </div>
+      <div class="class-card-body">
+        <div class="class-feature active"><span class="feat-dot on"></span>Claim</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Artifact</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Revision</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Epistemic State</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Evidence</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Attestation</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Challenge</div>
+        <div class="class-feature"><span class="feat-dot off"></span>Trust Score</div>
+        <div class="class-feature"><span class="feat-dot off"></span>Consensus</div>
+      </div>
+      <div class="class-card-footer">Use case: enterprise audit · regulated industries</div>
+    </div>
+    <div class="class-card">
+      <div class="class-card-header">
+        <div class="class-letter">C</div>
+        <div><div class="class-name">Trust</div><div class="class-level">Full trust transfer · 2000+ lines</div></div>
+      </div>
+      <div class="class-card-body">
+        <div class="class-feature active"><span class="feat-dot on"></span>Claim</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Artifact</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Revision</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Epistemic State</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Evidence</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Attestation</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Challenge</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Trust Score</div>
+        <div class="class-feature active"><span class="feat-dot on"></span>Consensus</div>
+      </div>
+      <div class="class-card-footer">Use case: DeFi protocols · autonomous agent swarms</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- REPOS -->
+<section id="repositories">
+  <div class="section-label">Repositories</div>
+  <h2>Four Repositories. One Ecosystem.</h2>
+  <p style="max-width:560px">Each repository is independent. Each serves a distinct role. The standard can live without any single implementation.</p>
+  <div class="repos-grid">
+    <a href="https://github.com/ERC-8004-GT/erc-8004-gt" class="repo-card" target="_blank" rel="noopener">
+      <div class="repo-org">github.com / ERC-8004-GT</div>
+      <div class="repo-name">erc-8004-gt</div>
+      <div class="repo-desc">The standard itself. Constitution, Core Draft, Glossary, Boundaries, Conformance Classes, Layered Architecture.</div>
+      <span class="repo-badge standard">Standard · Apache 2.0</span>
+    </a>
+    <a href="https://github.com/ERC-8004-GT/the-agora-network" class="repo-card" target="_blank" rel="noopener">
+      <div class="repo-org">github.com / ERC-8004-GT</div>
+      <div class="repo-name">the-agora-network</div>
+      <div class="repo-desc">Neutral testbed. Test vectors, conformance suite, interoperability tests, mock implementations in Python, TypeScript, and Solidity.</div>
+      <span class="repo-badge validation">Validation · Apache 2.0</span>
+    </a>
+    <a href="https://github.com/GravitOpenNetwork/gon-epistemic-os" class="repo-card" target="_blank" rel="noopener">
+      <div class="repo-org">github.com / GravitOpenNetwork</div>
+      <div class="repo-name">gon-epistemic-os</div>
+      <div class="repo-desc">Reference implementation at Class C. The first production-grade realization of ERC-8004-GT. Built by GON Foundation.</div>
+      <span class="repo-badge implementation">Implementation · Apache 2.0</span>
+    </a>
+    <a href="https://github.com/ERC-8004-GT/manifesto" class="repo-card" target="_blank" rel="noopener">
+      <div class="repo-org">github.com / ERC-8004-GT</div>
+      <div class="repo-name">erc-8004-gt-manifesto</div>
+      <div class="repo-desc">Philosophy and positioning. Why the world needs a protocol for trust transfer. Written for humans, not machines.</div>
+      <span class="repo-badge philosophy">Philosophy · CC BY 4.0</span>
+    </a>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<div class="dark-band">
+  <div class="dark-band-inner">
+    <div class="section-label">Roadmap</div>
+    <h2>Phases of Development</h2>
+    <div class="roadmap-grid">
+      <div class="rm-cell">
+        <div class="rm-phase" style="color:#34D399">✓ PHASE 0</div>
+        <div class="rm-title">Foundation</div>
+        <p style="font-size:0.8125rem">All core documents complete. Architecture finalized.</p>
+      </div>
+      <div class="rm-cell active">
+        <div class="rm-phase" style="color:var(--purple-glow)">→ PHASE 1 · NOW</div>
+        <div class="rm-title">Launch</div>
+        <p style="font-size:0.8125rem">Repositories published. Manifesto released. Ethereum Magicians post.</p>
+      </div>
+      <div class="rm-cell">
+        <div class="rm-phase" style="color:var(--muted)">PHASE 2 · Q3 2026</div>
+        <div class="rm-title">Community</div>
+        <p style="font-size:0.8125rem">Feedback collection. First external implementations begin.</p>
+      </div>
+      <div class="rm-cell">
+        <div class="rm-phase" style="color:var(--muted)">PHASE 3 · Q1 2027</div>
+        <div class="rm-title">Standardization</div>
+        <p style="font-size:0.8125rem">EIP submission. Last Call. Final approval.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="max-width:1100px;margin:0 auto;padding:0 2rem">
+  <footer>
+    <div>
+      <div class="footer-brand">Agora<span>net</span>.work</div>
+      <p style="font-size:0.8125rem;margin-top:0.375rem;color:var(--muted);font-weight:300">Neutral validation infrastructure for ERC-8004-GT</p>
+    </div>
+    <div class="footer-gon">
+      <img src="gravit-astra.webp" alt="Gravit Open Network">
+      <div class="footer-gon-text">
+        Reference implementation<br>
+        <a href="https://gravit.space" target="_blank" rel="noopener" style="color:var(--purple-pale);text-decoration:none">Gravit Open Network Foundation</a>
+      </div>
+    </div>
+    <div class="footer-meta">
+      <div>ERC-8004-GT · Version 1.0 · June 17, 2026</div>
+      <div>Apache 2.0 · The Agora Network belongs to everyone</div>
+      <div style="margin-top:4px">
+        <a href="https://github.com/ERC-8004-GT" target="_blank" rel="noopener">GitHub</a>
+        &nbsp;·&nbsp;
+        <a href="https://ethereum-magicians.org" target="_blank" rel="noopener">Ethereum Magicians</a>
+        &nbsp;·&nbsp;
+        <span>Dr. Alex Konviser</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var canvas=document.getElementById('network-canvas');
+  var ctx=canvas.getContext('2d');
+  var W,H,nodes;
+  var N=60,D=155;
+  function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight}
+  function init(){nodes=[];for(var i=0;i<N;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.8+.8})}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<nodes.length;i++){
+      var a=nodes[i];
+      a.x+=a.vx;a.y+=a.vy;
+      if(a.x<0||a.x>W)a.vx*=-1;
+      if(a.y<0||a.y>H)a.vy*=-1;
+      for(var j=i+1;j<nodes.length;j++){
+        var b=nodes[j];
+        var dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<D){
+          var alpha=(1-dist/D)*.55;
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle='rgba(139,92,246,'+alpha+')';ctx.lineWidth=.5;ctx.stroke();
+        }
+      }
+      ctx.beginPath();ctx.arc(a.x,a.y,a.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(167,139,250,0.65)';ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',function(){resize();init()});
+  resize();init();draw();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agora — a public square for checking claims</title>
+<meta name="description" content="Agora is a public square where published claims come with their data and one command, and anyone can check them without asking or trusting the author.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23b4532a'/%3E%3Cpath d='M6 24h20M9 24V13M16 24V13M23 24V13M6 11l10-5 10 5z' stroke='%23fbf7f0' stroke-width='2' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#fbf7f0; --surface:#ffffff; --ink:#1f1a14; --muted:#6b6157; --line:#e6ddcf;
+  --accent:#b4532a; --accent-soft:#f6e6dc; --ok:#2f6b3a; --ok-soft:#e3efe3; --warn:#8a5a00; --warn-soft:#f7ecd2;
+  --bad:#9b2c2c; --bad-soft:#f6e0e0; --code:#f3ede3;
+  --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#16130f;--surface:#1e1a15;--ink:#efe8dd;--muted:#a89c8d;--line:#3a332a;--accent:#e08a5f;--accent-soft:#3a2418;
+    --ok:#8fc79a;--ok-soft:#1d2e20;--warn:#e2b75c;--warn-soft:#352a12;--bad:#e59393;--bad-soft:#3a1d1d;--code:#25201a}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 var(--sans)}
+a{color:var(--accent)}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px}
+header.top{border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font:600 18px var(--serif);color:var(--ink);text-decoration:none}
+nav a{color:var(--muted);text-decoration:none;font-size:14px;margin-left:18px}
+nav a:hover{color:var(--ink)}
+@media(max-width:640px){nav{display:none}}
+.hero{padding:64px 0 40px}
+h1{font:600 clamp(32px,6vw,52px)/1.1 var(--serif);margin:0 0 20px;letter-spacing:-.01em}
+.lead{font-size:20px;color:var(--muted);max-width:680px;margin:0 0 28px}
+h2{font:600 28px/1.2 var(--serif);margin:0 0 14px}
+h3{font-size:18px;margin:0 0 6px}
+section{padding:44px 0;border-top:1px solid var(--line)}
+p{margin:0 0 14px}
+.muted{color:var(--muted)}
+.notice{background:var(--warn-soft);border-left:4px solid var(--warn);padding:16px 18px;border-radius:4px;margin:0 0 8px}
+.notice b{color:var(--warn)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+@media(max-width:760px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.steps{grid-template-columns:1fr}}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px}
+.step .n{font:600 13px var(--mono);color:var(--accent)}
+.step p{font-size:15px;margin:4px 0 0;color:var(--muted)}
+.results{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.tag{display:inline-block;font:600 12px var(--mono);padding:3px 8px;border-radius:3px;white-space:nowrap}
+.t-ok{background:var(--ok-soft);color:var(--ok)}
+.t-bad{background:var(--bad-soft);color:var(--bad)}
+.t-warn{background:var(--warn-soft);color:var(--warn)}
+.t-plain{background:var(--code);color:var(--muted)}
+.case{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:22px;margin:18px 0}
+.case-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.case-id{font:600 13px var(--mono);color:var(--accent)}
+.claim{font:600 19px/1.4 var(--serif);margin:4px 0 12px}
+dl{display:grid;grid-template-columns:130px 1fr;gap:6px 14px;margin:0 0 14px;font-size:15px}
+dt{color:var(--muted)}
+dd{margin:0;overflow-wrap:anywhere}
+@media(max-width:560px){dl{grid-template-columns:1fr}dt{margin-top:6px}}
+pre{background:var(--code);border-radius:6px;padding:12px 14px;overflow-x:auto;font:13.5px/1.5 var(--mono);margin:0 0 14px}
+code{font-family:var(--mono);font-size:.9em}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:13px}
+.tablewrap{overflow-x:auto}
+.correction{border-left:4px solid var(--accent);background:var(--accent-soft);padding:14px 16px;border-radius:4px;margin:14px 0}
+footer{border-top:1px solid var(--line);padding:28px 0 48px;font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <a class="brand" href="#"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#b4532a"/><path d="M6 24h20M9 24V13M16 24V13M23 24V13M6 11l10-5 10 5z" stroke="#fbf7f0" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>Agora</a>
+  <nav><a href="#how">How it works</a><a href="#claims">Claims</a><a href="#corrections">Corrections</a><a href="#funding">Funding</a><a href="#status">Status</a></nav>
+</div></header>
+
+<main class="wrap">
+
+<div class="hero">
+  <h1>A public square for checking claims.</h1>
+  <p class="lead">A claim posted here comes with its data and one command. Anyone can run it, without asking
+    the author and without trusting them. A claim counts as <em>independently reproduced</em> only when people
+    who are not its author have reproduced it.</p>
+  <div class="notice" id="status-short"><b>Honest status.</b> Agora was started on 13 October 2026 by one person,
+    Dr. Alex Konviser, who also founded the Gravit Open Network Foundation. It is therefore <b>not yet independent</b>.
+    The first claims below are that foundation's own: whoever starts the square is the first to be checked on it.
+    <a href="#status">What independence will require.</a></div>
+</div>
+
+<section id="how">
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step"><span class="n">1 · Claim</span><p>One sentence that can be true or false, with its author and date.</p></div>
+    <div class="step"><span class="n">2 · Data and command</span><p>Public data, code at a fixed version, and one command that recomputes the result.</p></div>
+    <div class="step"><span class="n">3 · Receipts</span><p>Each person who runs the check publishes a receipt: what they ran, where, and what came out.</p></div>
+    <div class="step"><span class="n">4 · Status</span><p>Derived from the receipts, never set by hand. Nothing is deleted: corrections are added.</p></div>
+  </div>
+  <h3 style="margin-top:28px">Three possible results of a check</h3>
+  <div class="results">
+    <span class="tag t-ok">REPRODUCED</span>
+    <span class="tag t-bad">NOT REPRODUCED</span>
+    <span class="tag t-warn">INSUFFICIENT DATA</span>
+  </div>
+  <p class="muted">A failed check is a result, not a nuisance: it is published like any other. "Insufficient data"
+    means the check could not be completed, which is a different fact from a claim that was checked and failed.</p>
+  <h3 style="margin-top:22px">Status of a claim</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Status</th><th>When</th></tr>
+    <tr><td><span class="tag t-plain">AUTHOR ONLY</span></td><td>Only the author has reproduced it.</td></tr>
+    <tr><td><span class="tag t-ok">INDEPENDENTLY REPRODUCED (n)</span></td><td>n receipts from people not connected to the author, and no unresolved failure.</td></tr>
+    <tr><td><span class="tag t-bad">DISPUTED</span></td><td>At least one NOT REPRODUCED receipt that the author has not answered with a published correction.</td></tr>
+  </table></div>
+  <h3 style="margin-top:22px">A receipt <span class="muted" style="font-weight:400">(format draft 0)</span></h3>
+<pre>{
+  "claim": "A-001",
+  "checker": "name or pseudonym, and any relation to the author",
+  "date": "2026-10-13",
+  "environment": "macOS 27, Python 3.12.x",
+  "command": "make eval",
+  "code_version": "commit or tag that was run",
+  "result": "REPRODUCED | NOT REPRODUCED | INSUFFICIENT DATA",
+  "output_sha256": "hash of the full output",
+  "notes": "anything that went wrong or differed"
+}</pre>
+  <p class="muted">Until Agora has its own repository, a receipt is published as an issue in the public repository of
+    the claim, so that it is visible to everyone and the author cannot remove it unnoticed. Signed receipts
+    (Ed25519) are planned.</p>
+</section>
+
+<section id="claims">
+  <h2>Claims</h2>
+  <p class="muted">All three claims are recomputed by the same command from a clean copy of a public repository:</p>
+<pre>git clone https://github.com/gravit-open-network-foundation/gravit-eval-pack
+cd gravit-eval-pack
+make eval</pre>
+
+  <div class="case">
+    <div class="case-head"><div><span class="case-id">A-001</span> · Author: Gravit Open Network Foundation · 13 Oct 2026</div><span class="tag t-plain">AUTHOR ONLY</span></div>
+    <p class="claim">The Gravit Verifier v0.5.0 decides all 40 published test vectors exactly as recorded, byte for byte, including each decision identifier.</p>
+    <dl>
+      <dt>Code</dt><dd><a href="https://github.com/gravit-open-network-foundation/verifier">verifier</a>, tag v0.5.0, run by <a href="https://github.com/gravit-open-network-foundation/gravit-eval-pack">gravit-eval-pack</a></dd>
+      <dt>Expected output</dt><dd>section 1 of the report, ending in <code>ALL REPRODUCED</code></dd>
+      <dt>Independent receipts</dt><dd>none yet</dd>
+    </dl>
+    <h3>Receipts</h3>
+    <div class="tablewrap"><table>
+      <tr><th>Date</th><th>Checker</th><th>Environment</th><th>Result</th></tr>
+      <tr><td>13 Oct 2026</td><td>author</td><td>clean clone, macOS, system Python 3.9.6</td><td><span class="tag t-bad">NOT REPRODUCED</span><br><span class="muted">Installation failed: the pack needs Python ≥ 3.10 but did not say so, and left a broken environment behind. A fix is under review: <a href="https://github.com/gravit-open-network-foundation/gravit-eval-pack/pull/2">eval-pack #2</a>.</span></td></tr>
+      <tr><td>13 Oct 2026</td><td>author</td><td>same machine, Python 3.12</td><td><span class="tag t-ok">REPRODUCED</span></td></tr>
+    </table></div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><div><span class="case-id">A-002</span> · Author: Gravit Open Network Foundation · 13 Oct 2026</div><span class="tag t-plain">AUTHOR ONLY</span></div>
+    <p class="claim">In a simulation with 100 honest and 1000 Sybil nodes over 30 rounds, the consensus engine ends with confidence 0.9874 in the true claim and 0.0126 in the false one.</p>
+    <dl>
+      <dt>Code</dt><dd><a href="https://github.com/gravit-open-network-foundation/gravit-grover">gravit-grover</a> at commit 4ad9e5c</dd>
+      <dt>Expected output</dt><dd>section 3 of the report</dd>
+      <dt>Limits</dt><dd>A simulation of the model, not a measurement of a deployed network.</dd>
+      <dt>Independent receipts</dt><dd>none yet</dd>
+    </dl>
+    <h3>Receipts</h3>
+    <div class="tablewrap"><table>
+      <tr><th>Date</th><th>Checker</th><th>Environment</th><th>Result</th></tr>
+      <tr><td>13 Oct 2026</td><td>author</td><td>clean clone, macOS, Python 3.12</td><td><span class="tag t-ok">REPRODUCED</span></td></tr>
+    </table></div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><div><span class="case-id">A-003</span> · Author: Gravit Open Network Foundation · 13 Oct 2026</div><span class="tag t-plain">AUTHOR ONLY</span></div>
+    <p class="claim">On a 3000-claim trace, a decision threshold of θ = 0.73 gives a true positive rate of 91.7 % (1376/1500) and a false positive rate of 7.3 % (110/1500), and the rates are the same for every θ from 0.11 to 0.78.</p>
+    <dl>
+      <dt>Code</dt><dd><a href="https://github.com/gravit-open-network-foundation/gravit-grover">gravit-grover</a> at commit 4ad9e5c, seed 20261011</dd>
+      <dt>Fingerprint</dt><dd><code>sha256:370326aa26d4cf7e5c87fa66e9809e6eeb451a29697ee7c9117b60d5599ac25d</code> (Merkle root of the trace)</dd>
+      <dt>Published in</dt><dd><a href="https://datatracker.ietf.org/doc/draft-gravit-gevp/08/">Internet-Draft draft-gravit-gevp-08</a>, section 9</dd>
+      <dt>Independent receipts</dt><dd>none yet</dd>
+    </dl>
+    <div class="correction"><b>Correction on record.</b> Revisions -00 to -07 of the same draft reported 93.4 % and 0.4 % at θ = 0.73.
+      No program that produces those figures exists, and they could not be reproduced. They are superseded by the
+      figures above and remain readable in the earlier revisions.</div>
+    <h3>Receipts</h3>
+    <div class="tablewrap"><table>
+      <tr><th>Date</th><th>Checker</th><th>Environment</th><th>Result</th></tr>
+      <tr><td>13 Oct 2026</td><td>author</td><td>clean clone, macOS, Python 3.12</td><td><span class="tag t-ok">REPRODUCED</span></td></tr>
+    </table></div>
+  </div>
+
+  <p><b>Check us.</b> If you run the command, publish your receipt as an issue in
+    <a href="https://github.com/gravit-open-network-foundation/gravit-eval-pack/issues">gravit-eval-pack</a>, whatever the result.
+    A failure is as welcome as a success.</p>
+</section>
+
+<section id="corrections">
+  <h2>Corrections</h2>
+  <p class="muted">Errors are corrected by adding to the record, never by erasing it.</p>
+  <div class="correction"><b>13 Oct 2026 — this website.</b> From June to October 2026 this address described
+    "The Agora Network" as a validation testbed for a protocol called "ERC-8004-GT", with conformance classes,
+    four GitHub repositories and a reference implementation by the Gravit Open Network.
+    <ul>
+      <li>ERC-8004 is an Ethereum standard by other authors. "ERC-8004-GT" was not part of it, and the name is no longer used.</li>
+      <li>None of the four linked repositories existed; every link returned "not found".</li>
+      <li>The roadmap (community feedback in Q3 2026, EIP submission) did not take place.</li>
+      <li>A site meant to be neutral carried the imagery of one organisation.</li>
+    </ul>
+    The earlier page remains readable, unchanged: <a href="archive/2026-07-05/index.html">archive/2026-07-05</a>.</div>
+  <div class="correction"><b>11 Oct 2026 — DWF pilot.</b> Documents in a Gravit repository described a joint pilot with DWF
+    as live on Solana with $18.4M routed. That was a plan, not a fact.
+    <a href="https://github.com/gravit-open-network-foundation/gravit-dwf-poc/blob/main/CORRECTION.md">Correction</a>.</div>
+  <div class="correction"><b>12 Oct 2026 — threshold calibration.</b> See claim A-003.</div>
+</section>
+
+<section id="funding">
+  <h2>Funding <span class="tag t-warn" style="vertical-align:middle">PLANNED · NOT YET OPERATING</span></h2>
+  <p>Checking takes work, and work that is needed should be paid. The model Agora intends to use:</p>
+  <ul>
+    <li><b>Authors pay to be checked.</b> A project that wants its public claims checked pays a fixed, published fee per claim.</li>
+    <li><b>Checkers are paid per receipt</b>, the same amount whatever the result.</li>
+    <li><b>A bounty for a confirmed error</b>: a NOT REPRODUCED receipt that leads to a published correction.</li>
+    <li><b>Payment never buys a result.</b> Fees are fixed in advance and do not depend on the outcome.</li>
+  </ul>
+</section>
+
+<section id="status">
+  <h2>Status and independence</h2>
+  <p>Agora will call itself neutral only when it is. Until then this section says what it is not.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Condition</th><th>Today</th></tr>
+    <tr><td>Governed by a council with at least two members not connected to Gravit</td><td><span class="tag t-bad">NO</span> one founder</td></tr>
+    <tr><td>Claims from authors other than Gravit, with their consent</td><td><span class="tag t-bad">NO</span> none yet</td></tr>
+    <tr><td>At least one independent receipt</td><td><span class="tag t-bad">NO</span> none yet</td></tr>
+    <tr><td>Own public repository for claims and receipts</td><td><span class="tag t-bad">NO</span> receipts go to the claim's repository</td></tr>
+    <tr><td>Every claim recomputable by one public command</td><td><span class="tag t-ok">YES</span> all three</td></tr>
+    <tr><td>Failures and corrections published</td><td><span class="tag t-ok">YES</span> see above</td></tr>
+  </table></div>
+</section>
+
+</main>
+
+<footer><div class="wrap">
+  Agora · agoranet.work · started 13 October 2026 by Dr. Alex Konviser.
+  This page is plain HTML with no tracking and no external resources.
+</div></footer>
+
+</body>
+</html>
