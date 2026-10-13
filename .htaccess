@@ -1,0 +1,4 @@
+# Folders without a trailing slash: redirect to https with the slash (the server's own redirect used http)
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^(.*[^/])$ https://%{HTTP_HOST}/$1/ [R=301,L]
