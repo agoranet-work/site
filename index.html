@@ -95,8 +95,9 @@ footer{border-top:1px solid var(--line);padding:28px 0 48px;font-size:14px;color
   <div class="panel"><svg width="64" height="64" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke-width="5" stroke-linecap="round"><path d="M24 5a19 19 0 0 1 16.5 9.5" stroke="#ffffff"/><path d="M42.9 20.6a19 19 0 0 1-6.5 17.3" stroke="#0a0a0a"/><path d="M30.6 41.8a19 19 0 0 1-17.8-1.9" stroke="#0a0a0a"/><path d="M8.2 34.6a19 19 0 0 1-2.9-17.6" stroke="#0a0a0a"/><path d="M9.5 11.3A19 19 0 0 1 17.6 6.1" stroke="#0a0a0a"/></g><circle cx="24" cy="24" r="5" fill="#ff4d5e"/></svg>
     <div class="rc">A-001 · Python 3.12 <span class="tag t-ok">REPRODUCED</span></div>
     <div class="rc">A-001 · Python 3.9 <span class="tag t-bad">NOT REPRODUCED</span></div>
-    <div class="rc">A-003 · θ calibration <span class="tag t-ok">REPRODUCED</span></div>
-    <small>Latest receipts, 13 Oct 2026 — all by the author so far.</small>
+    <div class="rc">A-004 · signed verdict <span class="tag t-ok">REPRODUCED</span></div>
+    <div class="rc">A-001 · Python 3.12 <span class="tag t-ok">REPRODUCED</span></div>
+    <small>Latest receipts. A-004: the first receipt by an external reviewer.</small>
   </div>
 </div>
   <div class="notice" id="status-short"><b>Honest status.</b> Agora was started on 13 October 2026 by one person,
@@ -203,6 +204,22 @@ make eval</pre>
     </table></div>
   </div>
 
+  <div class="case">
+    <div class="case-head"><div><span class="case-id">A-004</span> · Author: Gravit Open Network Foundation · 13 Oct 2026</div><span class="tag t-ok">INDEPENDENTLY REPRODUCED (1)</span></div>
+    <p class="claim">From release v0.6.0, the Gravit Verifier applies the signed result of an evidence record: an admissible record signed false blocks a Verified Fact, and a record signed null is not counted as support.</p>
+    <dl>
+      <dt>Code</dt><dd><a href="https://github.com/gravit-open-network-foundation/verifier/releases/tag/v0.6.0">verifier v0.6.0</a>, rule CANON-RES-012, seven new test vectors</dd>
+      <dt>Finding</dt><dd>12 Oct 2026: Iman Schrock, EMILIA Protocol, reported with a reproduction that release v0.5.0 ignored the signed result. In the SAFR v1.1 reference adapter, records signed true, false or null all produced a Verified Fact with identical decision IDs, and the repeat submission was disposed as Auto-Execute. Public demo keys; no payment was executed.</dd>
+      <dt>Fix</dt><dd>13 Oct 2026: verifier v0.6.0</dd>
+      <dt>Scope</dt><dd>This entry covers this one finding and its fix. It is not a review of the Gravit Verifier as a whole.</dd>
+    </dl>
+    <h3>Receipts</h3>
+    <div class="tablewrap"><table>
+      <tr><th>Date</th><th>Checker</th><th>Environment</th><th>Result</th></tr>
+      <tr><td>13 Oct 2026</td><td>Iman Schrock, EMILIA Protocol (external reviewer)</td><td>verifier v0.6.0 and the updated SAFR adapter, Python and Rust: 47 of 47 vectors; true permits Auto-Execute, false and null escalate</td><td><span class="tag t-ok">REPRODUCED</span></td></tr>
+    </table></div>
+  </div>
+
   <p><b>Check us.</b> If you run the command, add your receipt to
     <a href="https://github.com/agoranet-work/claims">agoranet-work/claims</a> (a pull request, or
     <a href="https://github.com/agoranet-work/claims/issues/new">an issue</a>), whatever the result.
@@ -253,7 +270,7 @@ make eval</pre>
     <tr><th>Condition</th><th>Today</th></tr>
     <tr><td>Governed by a council with at least two members not connected to Gravit</td><td><span class="tag t-bad">NO</span> one founder</td></tr>
     <tr><td>Claims from authors other than Gravit, with their consent</td><td><span class="tag t-bad">NO</span> none yet</td></tr>
-    <tr><td>At least one independent receipt</td><td><span class="tag t-bad">NO</span> none yet</td></tr>
+    <tr><td>At least one independent receipt</td><td><span class="tag t-ok">YES</span> A-004, Iman Schrock (EMILIA Protocol), published 21 Oct 2026</td></tr>
     <tr><td>Own public repository for claims and receipts</td><td><span class="tag t-ok">YES</span> <a href="https://github.com/agoranet-work/claims">agoranet-work/claims</a>, administered by an account not connected to Gravit</td></tr>
     <tr><td>Every claim recomputable by one public command</td><td><span class="tag t-ok">YES</span> all three</td></tr>
     <tr><td>Failures and corrections published</td><td><span class="tag t-ok">YES</span> see above</td></tr>
