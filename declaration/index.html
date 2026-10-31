@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agora Declaration</title>
+<meta name="description" content="Draft v0.1 of the Agora Declaration on intellectual freedom and open verification, with the matrix that shows how each article is enforced.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke-width='5' stroke-linecap='round'%3E%3Cpath d='M24 5a19 19 0 0 1 16.5 9.5' stroke='%2300b8a9'/%3E%3Cpath d='M42.9 20.6a19 19 0 0 1-6.5 17.3' stroke='%230a0a0a'/%3E%3Cpath d='M30.6 41.8a19 19 0 0 1-17.8-1.9' stroke='%230a0a0a'/%3E%3Cpath d='M8.2 34.6a19 19 0 0 1-2.9-17.6' stroke='%230a0a0a'/%3E%3Cpath d='M9.5 11.3A19 19 0 0 1 17.6 6.1' stroke='%230a0a0a'/%3E%3C/g%3E%3Ccircle cx='24' cy='24' r='5' fill='%23ff4d5e'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#ffffff; --surface:#ffffff; --soft:#f5f7f7; --ink:#0a0a0a; --muted:#4b5563; --line:#e5e7eb;
+  --accent:#00b8a9; --accent-ink:#007a70; --accent-soft:#d6fff9; --coral:#ff4d5e;
+  --ok:#007a70; --ok-soft:#d6fff9; --warn:#a15c00; --warn-soft:#fff3c4; --bad:#e8233a; --bad-soft:#ffe1e3; --code:#f3f4f6;
+  --sans:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 var(--sans)}
+a{color:var(--accent-ink);text-underline-offset:3px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header.top{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);z-index:5}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+nav a{color:var(--muted);text-decoration:none;font-size:14.5px;margin-left:22px;font-weight:500}
+nav a:hover{color:var(--ink)}
+@media(max-width:700px){nav{display:none}}
+.hero{padding:64px 0 48px;display:grid;grid-template-columns:1.25fr .9fr;gap:36px;align-items:center}
+@media(max-width:860px){.hero{grid-template-columns:1fr;padding-top:40px}}
+h1{font-size:clamp(36px,6vw,60px);line-height:1.04;margin:0 0 20px;letter-spacing:-.035em;font-weight:800}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{font-size:19px;color:var(--muted);max-width:620px;margin:0 0 26px}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 8px}
+.btn{display:inline-block;padding:12px 22px;border-radius:999px;font-weight:650;font-size:15px;text-decoration:none}
+.btn1{background:var(--accent);color:#fff}.btn1:hover{background:#00a395}
+.btn2{border:2px solid var(--ink);color:var(--ink)}.btn2:hover{background:var(--ink);color:#fff}
+.panel{background:var(--accent);border-radius:24px;padding:26px;display:flex;flex-direction:column;gap:12px}
+.rc{background:#fff;border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--ink)}
+.panel small{color:#e6fffb;font-size:13px}
+h2{font-size:clamp(26px,3.6vw,36px);line-height:1.15;margin:0 0 14px;letter-spacing:-.025em;font-weight:800}
+h3{font-size:18px;margin:0 0 6px}
+section{padding:52px 0;border-top:1px solid var(--line)}
+p{margin:0 0 14px}
+.muted{color:var(--muted)}
+.notice{background:var(--warn-soft);border-left:5px solid #f5b400;padding:16px 18px;border-radius:10px;margin:0 0 40px}
+.notice b{color:var(--warn)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+@media(max-width:760px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.steps{grid-template-columns:1fr}}
+.step{background:var(--soft);border-radius:16px;padding:16px}
+.step .n{font:700 13px var(--mono);color:var(--accent-ink)}
+.step p{font-size:15px;margin:6px 0 0;color:var(--muted)}
+.results{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.tag{display:inline-block;font:700 12px var(--mono);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.t-ok{background:var(--ok-soft);color:var(--ok)}
+.t-bad{background:var(--bad-soft);color:var(--bad)}
+.t-warn{background:var(--warn-soft);color:var(--warn)}
+.t-plain{background:var(--code);color:var(--muted)}
+.case{background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:24px;margin:18px 0}
+.case:hover{border-color:var(--accent)}
+.case-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:10px;color:var(--muted);font-size:15px}
+.case-id{font:700 13px var(--mono);color:var(--accent-ink)}
+.claim{font-weight:750;font-size:20px;line-height:1.35;margin:4px 0 14px;letter-spacing:-.01em}
+dl{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;margin:0 0 14px;font-size:15px}
+dt{color:var(--muted)}
+dd{margin:0;overflow-wrap:anywhere}
+@media(max-width:560px){dl{grid-template-columns:1fr}dt{margin-top:6px}}
+pre{background:#0a0a0a;color:#e6fffb;border-radius:14px;padding:14px 16px;overflow-x:auto;font:13.5px/1.55 var(--mono);margin:0 0 14px}
+code{font-family:var(--mono);font-size:.9em;background:var(--code);padding:1px 5px;border-radius:5px}
+pre code{background:none;padding:0}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:13px}
+.tablewrap{overflow-x:auto}
+.correction{border-left:5px solid var(--coral);background:#fff5f6;padding:14px 18px;border-radius:10px;margin:14px 0}
+footer{border-top:1px solid var(--line);padding:28px 0 48px;font-size:14px;color:var(--muted)}
+.art{margin:0 0 26px}.art h3{font-size:19px;margin:0 0 6px}
+ol.pts{margin:0 0 10px;padding-left:22px}
+.close{font-weight:750;font-size:20px;margin:6px 0}
+td.num{font:700 15px var(--mono);white-space:nowrap}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><svg width="30" height="30" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke-width="5" stroke-linecap="round"><path d="M24 5a19 19 0 0 1 16.5 9.5" stroke="#00b8a9"/><path d="M42.9 20.6a19 19 0 0 1-6.5 17.3" stroke="#0a0a0a"/><path d="M30.6 41.8a19 19 0 0 1-17.8-1.9" stroke="#0a0a0a"/><path d="M8.2 34.6a19 19 0 0 1-2.9-17.6" stroke="#0a0a0a"/><path d="M9.5 11.3A19 19 0 0 1 17.6 6.1" stroke="#0a0a0a"/></g><circle cx="24" cy="24" r="5" fill="#ff4d5e"/></svg>Agora</a>
+  <nav><a href="/">Claims</a><a href="#text">Declaration</a><a href="#matrix">Matrix</a><a href="#history">History</a></nav>
+</div></header>
+
+<main class="wrap">
+<div style="padding:48px 0 8px">
+  <h1>The Agora <em>Declaration</em></h1>
+  <p class="lead">Intellectual freedom and open verification. Draft v0.1, 31 October 2026. Not adopted. Open for comment.</p>
+  <div class="btns"><a class="btn btn1" href="https://github.com/agoranet-work/site/issues/new?title=Declaration%20v0.1%3A%20">Comment or propose a change</a><a class="btn btn2" href="#matrix">How it is enforced</a></div>
+</div>
+<div class="notice" style="margin-top:28px"><b>Honest status.</b> Agora is not yet independent. Its council does not yet have two members outside Gravit Open Network Foundation, which initiated it. Until it does, this Declaration states a goal, not a fact.</div>
+
+<section id="text">
+<div class="art"><h3>Preamble</h3><p>Knowledge grows when anyone may question it. Claims about science, technology and artificial intelligence are multiplying faster than anyone can check them. Agora exists so that a claim can be stated together with its data, rechecked by anyone, and recorded with the result, whoever made it.</p></div><div class="art"><h3>I. Mission</h3><p>Agora is the open laboratory and platform of the Open Verifiable AI Consortium (OVAIC, ovaic.org). Here the problems, methods, decisions and solutions that OVAIC members bring from all over the world are joined, tested and reproduced in public. Agora does not decide what anyone must think. It keeps the conditions under which ideas can be examined freely and rigorously.</p></div><div class="art"><h3>II. Independence</h3><ol class="pts"><li>Agora is not a division, instrument or representative of Gravit Open Network Foundation or of any single company.</li><li>OVAIC sets questions and methods together with its members; it does not decide results. Results come only from published receipts.</li><li>No initiator, contributor, sponsor, company, foundation, government or network, OVAIC included, has an inherent right to control Agora's findings.</li><li>Having initiated, funded or built Agora gives no privileged authority over other participants.</li></ol></div><div class="art"><h3>III. Equal standing of ideas</h3><p>The value of an idea is not determined by the money, fame, position or affiliation of its author. An unknown researcher and a large corporation have the same right to present and defend a claim. Equal standing does not mean equal weight: the strength of each argument depends on its evidence.</p></div><div class="art"><h3>IV. Freedom to disagree</h3><p>Every participant may challenge published claims, results, technical solutions and philosophical positions, in good faith and with respect. Nobody is excluded because their idea is inconvenient to an influential participant.</p></div><div class="art"><h3>V. No monopoly on truth</h3><p>No initiator, participant, council or company has the exclusive right to declare what is true. Agora does not own truth; it records how claims were checked.</p></div><div class="art"><h3>VI. Open competition</h3><p>Agora gives equal opportunity to present, discuss and test competing technologies, including those of organizations that compete with its initiators. Rules and criteria of every comparison are published before it begins.</p></div><div class="art"><h3>VII. Verification and evidence</h3><ol class="pts"><li>Agora distinguishes a claim from a reproduced result, and self reported performance from independently reproduced performance.</li><li>A claim is published with its data and the steps to recheck it. Each check is recorded as a receipt: reproduced, not reproduced, or insufficient data.</li><li>Negative results, failed checks and corrections are never hidden, including those against the initiators.</li></ol></div><div class="art"><h3>VIII. Right to a reason and to appeal</h3><p>If a submission is refused, its author is told the concrete reason, may fix it and resubmit, and may appeal to someone who did not make the first decision. Nobody is obliged to agree with the author's position.</p></div><div class="art"><h3>IX. Transparency and non domination</h3><ol class="pts"><li>Funding, relationships and conflicts of interest are disclosed.</li><li>Money does not buy editorial control, preferential review or a better result.</li><li>No sponsor may suppress criticism or alter a published finding.</li></ol></div><div class="art"><h3>X. Initiators</h3><p>Agora was initiated by a group of contributors; their names and roles are listed in the public history of this document. Initiating Agora gives them no ownership of its space, no authority over its findings and no privileged control over its future. They take part under the same rules as everyone else. Agora must remain able to show that their own technologies are weaker than others.</p></div><div class="art"><h3>XI. Moderation is not judgment</h3><p>Removing spam, unlawful content or unsafe material is administration. It is kept separate from judging whether a claim is right, and every moderation decision is logged publicly.</p></div><div class="art"><h3>XII. Amendments</h3><p>Anyone may propose an amendment. Amendments are made through a public procedure and preserve the purpose of Agora. The full history of this document stays public.</p></div>
+<p class="close"><b>No one owns the truth. Everyone may challenge it.</b></p><p class="close"><b>The strongest idea should prevail, not the strongest institution.</b></p>
+</section>
+
+<section id="matrix">
+  <h2>Implementation matrix</h2>
+  <p class="muted">A principle counts only if it has a mechanism and a number anyone can check. Numbers as of 31 October 2026, counted from the <a href="/">claims page</a>. They are updated with every new claim, receipt or decision.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Article</th><th>Mechanism</th><th>Public number</th><th>Today</th></tr>
+    <tr><td><b>II Independence</b></td><td>Council with at least two members not connected to the initiator. OVAIC sets questions; only receipts set results.</td><td>Council members not connected to the initiator</td><td class="num">0</td></tr><tr><td><b>III Equal standing</b></td><td>One template and the same rules for every author.</td><td>Claims by authors other than the initiator</td><td class="num">0 of 4</td></tr><tr><td><b>IV Freedom to disagree</b></td><td>Anyone may file a receipt by pull request, without asking the author.</td><td>Receipts by people other than the author</td><td class="num">1 of 5</td></tr><tr><td><b>V No monopoly on truth</b></td><td>A claim's status is computed from its receipts, never set by hand.</td><td>Claims whose status comes only from receipts</td><td class="num">4 of 4</td></tr><tr><td><b>VI Open competition</b></td><td>Rules and criteria of a comparison are published before it starts.</td><td>Comparisons run</td><td class="num">0</td></tr><tr><td><b>VII Verification</b></td><td>Three results only: reproduced, not reproduced, insufficient data. Failed checks stay published.</td><td>NOT REPRODUCED receipts kept public</td><td class="num">1 of 1</td></tr><tr><td><b>VIII Reason and appeal</b></td><td>Every refusal names its reason; an appeal goes to someone who did not make the first decision.</td><td>Refusals / with a reason / appeals</td><td class="num">0 / 0 / 0</td></tr><tr><td><b>IX Transparency</b></td><td>Funding and relationships are listed on the site. Fees are fixed before a check and do not depend on its result.</td><td>Money received</td><td class="num">none</td></tr><tr><td><b>X Initiators</b></td><td>The initiator's own claims are checked under the same rules, and errors against it are published.</td><td>Published corrections that concern the initiator</td><td class="num">4 of 4</td></tr><tr><td><b>XI Moderation</b></td><td>Every moderation decision is logged in public, separate from judging claims.</td><td>Moderation actions</td><td class="num">0</td></tr><tr><td><b>XII Amendments</b></td><td>Proposals are made as public issues; the full history stays readable.</td><td>Amendments proposed</td><td class="num">0</td></tr>
+  </table></div>
+  <p class="muted" style="margin-top:14px">Until the council exists, there is nobody independent to hear an appeal. This gap is stated here rather than hidden.</p>
+</section>
+
+<section id="history">
+  <h2>History</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Date</th><th>Version</th><th>Change</th></tr>
+    <tr><td>31 Oct 2026</td><td>v0.1</td><td>First draft, proposed for comment by Dr. Alex Konviser, initiator of Agora. Comments and proposals: <a href="https://github.com/agoranet-work/site/issues">public issues</a>.</td></tr>
+  </table></div>
+</section>
+</main>
+
+<footer><div class="wrap">
+  Agora · agoranet.work · the open laboratory of the <a href="https://ovaic.org/">Open Verifiable AI Consortium</a>.
+  This page is plain HTML with no tracking and no external resources.
+  Source: <a href="https://github.com/agoranet-work/site">agoranet-work/site</a>.
+</div></footer>
+</body>
+</html>
